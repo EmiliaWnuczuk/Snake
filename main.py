@@ -4,59 +4,48 @@ from food import Food
 from scoreboard import Scoreboard
 import time
 
-screen = Screen()
-screen.setup(600, 600)
-screen.bgcolor("black")
-screen.title("Snake game")
-screen.tracer(0)
+def main() -> None:
+    screen = Screen()
+    screen.setup(600, 600)
+    screen.bgcolor("black")
+    screen.title("Snake game")
+    screen.tracer(0)
 
-snake = Snake()
-food = Food()
-scoreboard = Scoreboard()
-screen.update()
-
-screen.listen()
-screen.onkey(snake.up, "Up")
-screen.onkey(snake.down, "Down")
-screen.onkey(snake.left, "Left")
-screen.onkey(snake.right, "Right")
-
-game_is_on = True
-while game_is_on:
+    snake = Snake()
+    food = Food()
+    scoreboard = Scoreboard()
     screen.update()
-    time.sleep(0.1)
-    snake.move()
 
-    #detect collision with food
-    if snake.head.distance(food) < 15:
-        snake.extend()
-        food.refresh()
-        scoreboard.increase_score()
+    screen.listen()
+    screen.onkey(snake.up, "Up")
+    screen.onkey(snake.down, "Down")
+    screen.onkey(snake.left, "Left")
+    screen.onkey(snake.right, "Right")
 
-    #detect collision with wall
-    if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
-        scoreboard.reset()
-        snake.reset()
+    game_is_on = True
+    while game_is_on:
+        screen.update()
+        time.sleep(0.1)
+        snake.move()
 
-    #detect collision with tale
-    for segment in snake.segments[1:]:
-        if snake.head.distance(segment) < 10:
+        #detect collision with food
+        if snake.head.distance(food) < 15:
+            snake.extend()
+            food.refresh()
+            scoreboard.increase_score()
+
+        #detect collision with wall
+        if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
             scoreboard.reset()
             snake.reset()
 
-screen.exitonclick()
+        #detect collision with tale
+        for segment in snake.segments[1:]:
+            if snake.head.distance(segment) < 10:
+                scoreboard.reset()
+                snake.reset()
 
-# class Animal:
-#     def __init__(self):
-#         self.eyes = 2
-#
-#     def breathe(self):
-#         print("Inhale")
-#
-# class Fish(Animal):
-#
-#     def __init__(self):
-#         super().__init__()
-#
-# nemo = Fish()
-# nemo.breathe()ds
+    screen.exitonclick()
+
+if __name__ == "__main__":
+    main()
